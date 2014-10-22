@@ -10,14 +10,9 @@ from email.mime.text import MIMEText
 # you == recipient's email address
 me = "info@ibercivis.es"
 #???? Tendria que ir abajo
-#you = "mcibanez@bifi.es"
+you = "frasanz@bifi.es"
 
 # Create message container - the correct MIME type is multipart/alternative.
-msg = MIMEMultipart('alternative')
-msg['Subject'] = "¡Ahora puedes colaborar con la gripe!"
-msg['From'] = me
-msg['To'] = you
-
 # Create the body of the message (a plain-text and an HTML version).
 # Text in plain text
 text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
@@ -49,30 +44,33 @@ Salón de Actos del edificio central del CSIC en Madrid (c/ Serrano, 117).</b>
 </html>
 """
 
-# Record the MIME types of both parts - text/plain and text/html.
-part1 = MIMEText(text, 'plain')
-part2 = MIMEText(html, 'html')
-
-# Attach parts into message container.
-# According to RFC 2046, the last part of a multipart message, in this case
-# the HTML message, is best and preferred.
-msg.attach(part1)
-msg.attach(part2)
-
 # Send the message via local SMTP server.
-s = smtplib.SMTP('smtp.ibercivis.es')
 # sendmail function takes 3 arguments: sender's address, recipient's address
 # and message to send - here it is sent as one string.
+
 
 
 fileSource= 'emails2'
 fsrc = open(fileSource, "r")
 for line in fsrc:
+# Attach parts into message container.
+# According to RFC 2046, the last part of a multipart message, in this case
+# the HTML message, is best and preferred.
+    s = smtplib.SMTP('smtp.ibercivis.es')
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = "¡Ahora puedes colaborar con la gripe!i 9933"
+    msg['From'] = me
+# Record the MIME types of both parts - text/plain and text/html.
+    part2 = MIMEText(html, 'html')
+
+    msg.attach(part2)
+
     line =line[:-1]
     msg['To'] = line
-    print line
+    print msg.as_string()
     s.sendmail(me, line, msg.as_string())
+    msg = None
 fsrc.close()
 
-s.sendmail(me, you, msg.as_string())
+#s.sendmail(me, you, msg.as_string())
 s.quit()
